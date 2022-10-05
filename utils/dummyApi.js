@@ -11,7 +11,7 @@ export const getData = async ({ key, page }) => {
       if (page === 1) {
         setTimeout(() => {
           resolve(page1);
-        }, 100);
+        }, 6000);
       } else if (page === 2) {
         setTimeout(() => {
           resolve(page2);

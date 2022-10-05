@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 
 const FavoriteScreen = ({ navigation }) => {
   const favorites = useSelector((state) => state.favorite.favorite);
+  const settings = useSelector((state) => state.settings);
   const leftSwipeHandler = () => {
     navigation.navigate("Settings");
   };
@@ -14,7 +15,7 @@ const FavoriteScreen = ({ navigation }) => {
     navigation.navigate("Categories");
   };
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, styles.root[settings.theme]]}>
       {favorites && favorites.length !== 0 && (
         <FlatList
           style={styles.list}
@@ -47,11 +48,16 @@ const styles = StyleSheet.create({
   },
   root: {
     flex: 1,
-    backgroundColor: Colors.favoriteScreen,
     paddingTop: 50,
     paddingHorizontal: 25,
     alignItems: "center",
     width: "100%",
+    dark: {
+      backgroundColor: Colors.dark.favoriteScreen,
+    },
+    light: {
+      backgroundColor: Colors.light.favoriteScreen,
+    },
   },
   imageContainer: {
     flex: 1,

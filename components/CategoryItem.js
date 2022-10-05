@@ -9,9 +9,12 @@ import {
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { Colors } from "../utils/Colors";
 
 const CategoryItem = ({ item }) => {
   const { width } = useWindowDimensions();
+  const theme = useSelector((select) => select.settings.theme);
   let size = width < 380 ? 150 : 165;
   const [pressed, setPressed] = useState(false);
   const navigation = useNavigation();
@@ -43,7 +46,9 @@ const CategoryItem = ({ item }) => {
             ]}
           />
           <View style={styles.itemTextContainer}>
-            <Text style={styles.itemText}>{item.name}</Text>
+            <Text style={[styles.itemText, styles.itemText[theme]]}>
+              {item.name}
+            </Text>
           </View>
         </ImageBackground>
       </View>
@@ -70,12 +75,18 @@ const styles = StyleSheet.create({
   itemText: {
     letterSpacing: 1,
     fontSize: 16,
-    color: "black",
-    backgroundColor: "rgba(255,255,255,1)",
     borderRadius: 4,
     padding: 4,
     textAlign: "center",
     fontWeight: "600",
+    light: {
+      backgroundColor: Colors.light.categoryItem.backgroundColor,
+      color: Colors.light.categoryItem.textColor,
+    },
+    dark: {
+      backgroundColor: Colors.dark.categoryItem.backgroundColor,
+      color: Colors.dark.categoryItem.textColor,
+    },
   },
   backgroundImage: {
     height: "100%",

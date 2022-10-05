@@ -4,15 +4,17 @@ import { Colors } from "../utils/Colors";
 import { CATEGORIES } from "../data/categories";
 import CategoryItem from "../components/CategoryItem";
 import GestureRecognizer from "react-native-swipe-gestures";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { favoriteNewsActions } from "../store/slices/favoriteNewsSlice";
 import { getDataFromStorage } from "../utils/Storage";
 
 const CategoriesScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const settings = useSelector((state) => state.settings);
   const leftSwipeHandler = () => {
     navigation.navigate("Favorite");
   };
+
   useEffect(() => {
     const foo = async () => {
       const data = await getDataFromStorage("@favorites");
@@ -22,7 +24,7 @@ const CategoriesScreen = ({ navigation }) => {
     foo();
   }, []);
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, styles.root[settings.theme]]}>
       <FlatList
         style={styles.list}
         data={CATEGORIES}
@@ -46,10 +48,15 @@ const styles = StyleSheet.create({
   },
   root: {
     flex: 1,
-    backgroundColor: Colors.categoriesScreen,
     paddingTop: 50,
     justifyContent: "center",
     alignItems: "center",
+    dark: {
+      backgroundColor: Colors.dark.categoriesScreen.background,
+    },
+    light: {
+      backgroundColor: Colors.light.categoriesScreen.background,
+    },
   },
   list: {
     flex: 1,

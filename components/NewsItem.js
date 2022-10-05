@@ -13,9 +13,12 @@ import FostistoIcon from "react-native-vector-icons/Fontisto";
 import { useDispatch, useSelector } from "react-redux";
 import { favoriteNewsActions } from "../store/slices/favoriteNewsSlice";
 import { formatDate } from "../utils/formatDate";
+import { Colors } from "../utils/Colors";
+
 const NewsItem = ({ item }) => {
   const dispatch = useDispatch();
   const favorites = useSelector((state) => state.favorite.favorite);
+  const theme = useSelector((state) => state.settings.theme);
   const isFavorite =
     favorites.find((favorite) => favorite.title === item.title) !== undefined;
   const seeMoreHandler = async () => {
@@ -29,7 +32,7 @@ const NewsItem = ({ item }) => {
     }
   };
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, styles.root[theme]]}>
       <Image
         source={
           item.urlToImage
@@ -39,7 +42,9 @@ const NewsItem = ({ item }) => {
         style={styles.image}
       />
       <View style={styles.newsInfo}>
-        <Text style={styles.title}>{item.title}</Text>
+        <Text style={[styles.title, styles.textColor[theme]]}>
+          {item.title}
+        </Text>
         <Text style={styles.sourceContainer}>
           <View>
             <Text style={styles.source}>{item.source.name}</Text>
@@ -50,7 +55,9 @@ const NewsItem = ({ item }) => {
             </View>
           )}
         </Text>
-        <Text style={styles.description}>{item.description}</Text>
+        <Text style={[styles.description, styles.textColor[theme]]}>
+          {item.description}
+        </Text>
         {item.publishedAt && (
           <Text style={styles.date}>
             Published on {formatDate(item.publishedAt).date} at{" "}
@@ -84,12 +91,17 @@ const NewsItem = ({ item }) => {
 const styles = StyleSheet.create({
   root: {
     alignItems: "center",
-    backgroundColor: "white",
     marginBottom: 25,
     elevation: 3,
     borderRadius: 8,
     overflow: "hidden",
     width: "100%",
+    light: {
+      backgroundColor: Colors.light.newsItem.backgroundColor,
+    },
+    dark: {
+      backgroundColor: Colors.dark.newsItem.backgroundColor,
+    },
   },
   image: {
     width: "100%",
@@ -160,6 +172,14 @@ const styles = StyleSheet.create({
   },
   browserIcon: {
     marginRight: 8,
+  },
+  textColor: {
+    light: {
+      color: Colors.light.newsItem.textColor,
+    },
+    dark: {
+      color: Colors.dark.newsItem.textColor,
+    },
   },
 });
 

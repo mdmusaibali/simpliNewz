@@ -13,6 +13,10 @@ import { getData } from "../utils/dummyApi";
 import { FlatList } from "react-native-gesture-handler";
 import NewsItem from "../components/NewsItem";
 import { useSelector } from "react-redux";
+import { rejector } from "../utils/helper";
+import NoInternet from "../components/NoInternet";
+import { getNews } from "../utils/api";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 const APIS = [
   { key: "d18e8bda03ac488ab643b24428a95b1d", index: 1 },
@@ -31,6 +35,7 @@ const APIS = [
 
 const NewsScreen = () => {
   const settings = useSelector((state) => state.settings);
+  const theme = settings.theme;
   const [page, setPage] = useState(1);
   const [news, setNews] = useState([]);
   const [status, setStatus] = useState("");
@@ -81,7 +86,7 @@ const NewsScreen = () => {
           }
         }
       } catch (error) {
-        // console.log("ERROR", error.message);
+        console.log("ERROR", error.message);
         setStatus(error.message);
       }
     };
@@ -114,11 +119,21 @@ const NewsScreen = () => {
         </View>
       );
     }
-    return <ActivityIndicator size="large" color="#F08A5D" />;
+    return (
+      <>
+        <ActivityIndicator
+          size="large"
+          color={Colors[theme].activityIndicator}
+        />
+        <Text style={[styles.indicatorText, styles.indicatorText[theme]]}>
+          If this is taking too long please check your internet connection.
+        </Text>
+      </>
+    );
   };
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, styles.root[theme]]}>
       <FlatList
         style={styles.list}
         data={news}
@@ -140,7 +155,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     flex: 1,
     alignItems: "center",
-    backgroundColor: Colors.categoriesScreen,
+    dark: {
+      backgroundColor: Colors.dark.newsScreen.backgroundColor,
+    },
+    light: {
+      backgroundColor: Colors.light.newsScreen.backgroundColor,
+    },
   },
   list: {
     width: "100%",
@@ -165,6 +185,15 @@ const styles = StyleSheet.create({
     padding: 16,
     textAlign: "center",
     color: "red",
+  },
+  indicatorText: {
+    light: {
+      color: "white",
+    },
+    dark: {
+      color: "white",
+    },
+    textAlign: "center",
   },
 });
 
